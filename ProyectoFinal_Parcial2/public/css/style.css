@@ -152,18 +152,50 @@
 
 
 /*** Header carousel ***/
+.header-carousel {
+    width: 100vw; /* Ancho completo de la ventana */
+    margin-left: calc(-50vw + 50%); /* Centrar y expandir a ancho completo */
+    position: relative;
+}
+
+.header-carousel .owl-carousel-item {
+    position: relative;
+    min-height: 700px; /* Altura para pantallas grandes */
+    width: 100%;
+}
+
+.header-carousel .owl-carousel-item img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 @media (max-width: 768px) {
     .header-carousel .owl-carousel-item {
-        position: relative;
-        min-height: 500px;
+        min-height: 500px; /* Altura para móviles */
     }
-    
-    .header-carousel .owl-carousel-item img {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+}
+
+@media (min-width: 1200px) {
+    .header-carousel .owl-carousel-item {
+        min-height: 80vh; /* 80% de la altura de la ventana en pantallas muy grandes */
     }
+}
+
+/* Asegurar que el contenedor del carousel no tenga restricciones */
+.container-fluid.p-0 {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Permitir que el carousel escape del contenedor Bootstrap */
+#contenedorprincipal .container-fluid.p-0 {
+    width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
 }
 
 .header-carousel .owl-nav {
