@@ -1,6 +1,5 @@
-// public/js/cargador_paginas.js
 window.cargarPaginas = function (pagina) {
-    const protectedPages = ['pages/productos.html', 'pages/clientes.html'];
+    const protectedPages = ['pages/productos.html', 'pages/clientes.html', 'pages/facturas.html'];
     const isProtectedPage = protectedPages.includes(pagina);
 
     if (isProtectedPage && !localStorage.getItem('adminSession')) {
@@ -61,6 +60,14 @@ window.cargarPaginas = function (pagina) {
                 setTimeout(() => {
                     window.initClientes();
                     console.log('[Cargador] initClientes called for clientes.html');
+                }, 200);
+            }
+
+            // Inicializar facturas si se cargó facturas.html
+            if (url.includes('facturas.html') && typeof window.initFacturas === 'function') {
+                setTimeout(() => {
+                    window.initFacturas();
+                    console.log('[Cargador] initFacturas called for facturas.html');
                 }, 200);
             }
         })

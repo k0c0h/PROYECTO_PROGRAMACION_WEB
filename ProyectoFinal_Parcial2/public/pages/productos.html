@@ -49,6 +49,10 @@
                         <input type="number" class="form-control" id="productPrice" placeholder="Precio" step="0.01" required>
                     </div>
                     <div class="mb-3">
+                        <label for="productQuantity" class="form-label">Cantidad en Inventario</label>
+                        <input type="number" class="form-control" id="productQuantity" placeholder="Cantidad" min="0" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="productImage" class="form-label">Imagen</label>
                         <input type="file" class="form-control" id="productImage" accept="image/*">
                         <button type="button" id="startCamera" class="btn btn-primary w-100 mt-2">Abrir Cámara</button>
@@ -68,6 +72,7 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Precio</th>
+                            <th>Cantidad</th>
                             <th>Imagen</th>
                             <th>Acciones</th>
                         </tr>

@@ -1,0 +1,153 @@
+<div id="publicView">
+    <!-- Header -->
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">Facturación</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a class="text-white" href="#" onclick="cargarPaginas('index')">Home</a></li>
+                            <li class="breadcrumb-item text-white active" aria-current="page">Facturas</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Public Message -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title bg-white text-center text-primary px-3">Facturación</h6>
+                <h1 class="mb-5">Acceso Restringido</h1>
+                <p class="text-danger">Por favor, inicia sesión como administrador para generar facturas.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="adminView" style="display: none;">
+    <header class="bg-primary text-white text-center py-5">
+        <h1 class="m-0"><i class="fa fa-file-invoice me-3"></i>Mundo Papelito - Generación de Facturas</h1>
+    </header>
+
+    <main class="container py-5">
+        <section class="row">
+            <article class="col-12">
+                <h2 class="mb-4">Crear Factura</h2>
+                <form id="invoiceForm" class="p-4 bg-light rounded shadow">
+                    <!-- Client Selection -->
+                    <div class="mb-3">
+                        <label for="clientSelect" class="form-label">Seleccionar Cliente</label>
+                        <select class="form-control" id="clientSelect" required>
+                            <option value="">Selecciona un cliente</option>
+                        </select>
+                        <div id="clientInfo" class="mt-2" style="display: none;">
+                            <p><strong>Nombre:</strong> <span id="clientName"></span></p>
+                            <p><strong>Email:</strong> <span id="clientEmail"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Product Selection -->
+                    <div class="mb-3">
+                        <label class="form-label">Añadir Producto</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select class="form-control" id="productSelect">
+                                    <option value="">Selecciona un producto</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control" id="productQuantity" placeholder="Cantidad" min="1" required>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" id="addProduct" class="btn btn-primary w-100">Añadir Producto</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Table -->
+                    <table class="table table-bordered mt-4">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio Unitario</th>
+                                <th>Cantidad</th>
+                                <th>Monto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceTableBody"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                <td colspan="2" id="subtotal">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>IVA (12%):</strong></td>
+                                <td colspan="2" id="iva">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td colspan="2" id="total">$0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Generate Invoice Button -->
+                    <button type="button" id="generateInvoice" class="btn btn-success w-100" disabled>Generar Factura</button>
+                </form>
+            </article>
+        </section>
+    </main>
+
+    <!-- Invoice Modal -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="invoiceModalLabel">Factura - Mundo Papelito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Datos del Cliente</h6>
+                    <p><strong>Nombre:</strong> <span id="modalClientName"></span></p>
+                    <p><strong>Email:</strong> <span id="modalClientEmail"></span></p>
+                    <hr>
+                    <h6>Detalles de la Factura</h6>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio Unitario</th>
+                                <th>Cantidad</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalInvoiceTableBody"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                <td id="modalSubtotal">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>IVA (12%):</strong></td>
+                                <td id="modalIva">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td id="modalTotal">$0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" id="saveInvoice" class="btn btn-primary">Guardar Factura</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

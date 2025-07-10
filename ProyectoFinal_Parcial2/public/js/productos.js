@@ -5,15 +5,19 @@ window.initProductos = function () {
 
     // Initial product data
     const initialProducts = [
-        { id: '_1', name: 'Cuaderno', price: 10.99, image: './public/img/product1.jpg' },
-        { id: '_2', name: 'Lápiz', price: 1.99, image: './public/img/product2.jpg' },
-        { id: '_3', name: 'Borrador', price: 0.99, image: './public/img/product3.jpg' }
+        { id: '_1', name: 'Cuaderno', price: 10.99, quantity: 100, image: './public/img/product1.jpg' },
+        { id: '_2', name: 'Lápiz', price: 1.99, quantity: 200, image: './public/img/product2.jpg' },
+        { id: '_3', name: 'Borrador', price: 0.99, quantity: 150, image: './public/img/product3.jpg' }
     ];
 
     // Initialize products in localStorage if empty
     let products = JSON.parse(localStorage.getItem('products')) || [];
     if (products.length === 0) {
         products = initialProducts;
+        localStorage.setItem('products', JSON.stringify(products));
+    } else {
+        // Ensure existing products have quantity field
+        products = products.map(p => ({ ...p, quantity: p.quantity || 0 }));
         localStorage.setItem('products', JSON.stringify(products));
     }
     console.log('[Productos] Products loaded:', products);
@@ -27,6 +31,7 @@ window.initProductos = function () {
     const productTableBody = document.getElementById('productTableBody');
     const productImage = document.getElementById('productImage');
     const productImagePreview = document.getElementById('productImagePreview');
+    const productQuantityInput = document.getElementById('productQuantity');
     const cancelEditButton = document.getElementById('cancelEdit');
     const startCameraButton = document.getElementById('startCamera');
     const capturePhotoButton = document.getElementById('capturePhoto');
@@ -34,7 +39,7 @@ window.initProductos = function () {
     const productCanvas = document.getElementById('productCanvas');
 
     // Check if required elements exist
-    if (!publicView || !adminView || !publicProductList || !productError || !productForm || !productTableBody || !startCameraButton || !capturePhotoButton || !productCamera || !productCanvas) {
+    if (!publicView || !adminView || !publicProductList || !productError || !productForm || !productTableBody || !productQuantityInput || !startCameraButton || !capturePhotoButton || !productCamera || !productCanvas) {
         console.error('[Productos] Error: One or more DOM elements not found', {
             publicView: !!publicView,
             adminView: !!adminView,
@@ -42,6 +47,7 @@ window.initProductos = function () {
             productError: !!productError,
             productForm: !!productForm,
             productTableBody: !!productTableBody,
+            productQuantityInput: !!productQuantityInput,
             startCameraButton: !!startCameraButton,
             capturePhotoButton: !!capturePhotoButton,
             productCamera: !!productCamera,
@@ -85,6 +91,7 @@ window.initProductos = function () {
                         <h5 class="mb-0">${product.name}</h5>
                         <small>
                             <p>Precio: $${product.price}</p>
+                            <p>Cantidad disponible: ${product.quantity}</p>
                         </small>
                     </div>
                 </div>
@@ -104,6 +111,7 @@ window.initProductos = function () {
             row.innerHTML = `
                 <td>${product.name}</td>
                 <td>$${product.price}</td>
+                <td>${product.quantity}</td>
                 <td><img src="${product.image || './public/img/default-product.jpg'}" class="img-fluid" style="max-height: 50px;" alt="Producto"></td>
                 <td>
                     <button class="btn btn-warning btn-sm" onclick="editProduct('${product.id}')">Editar</button>
@@ -188,9 +196,16 @@ window.initProductos = function () {
             const id = document.getElementById('productId').value || generateId();
             const name = document.getElementById('productName').value;
             const price = parseFloat(document.getElementById('productPrice').value);
+            const quantity = parseInt(document.getElementById('productQuantity').value);
             const image = productImagePreview ? productImagePreview.src : '';
 
-            const product = { id, name, price, image };
+            if (quantity < 0) {
+                productError.textContent = 'La cantidad no puede ser negativa.';
+                productError.style.display = 'block';
+                return;
+            }
+
+            const product = { id, name, price, quantity, image };
 
             if (document.getElementById('productId').value) {
                 // Edit existing product
@@ -231,11 +246,12 @@ window.initProductos = function () {
 
     // Edit product
     window.editProduct = function (id) {
-        const product = products.find(c => c.id === id);
+        const product = products.find(p => p.id === id);
         if (!product) return;
         document.getElementById('productId').value = product.id;
         document.getElementById('productName').value = product.name;
         document.getElementById('productPrice').value = product.price;
+        document.getElementById('productQuantity').value = product.quantity;
         if (product.image && productImagePreview) {
             productImagePreview.src = product.image;
             productImagePreview.style.display = 'block';
