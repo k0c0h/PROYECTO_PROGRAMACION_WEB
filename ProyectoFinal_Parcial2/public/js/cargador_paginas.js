@@ -22,8 +22,19 @@ function cargarPaginas(pagina) {
         .then(res => res.text())
         .then(data => {
             document.getElementById('contenedorprincipal').innerHTML = data;
+            
             // Reinicializar carousels después de cargar el contenido
             initializeCarousels();
+            
+            // Verificar si se cargó la página de contacto e inicializar geolocalización
+            if (url.includes('contact.html')) {
+                // Esperar un poco para que el DOM se actualice completamente
+                setTimeout(() => {
+                    if (typeof initGeolocation === 'function') {
+                        initGeolocation();
+                    }
+                }, 200);
+            }
         })
         .catch(error => {
             console.error('Error cargando la página:', error);
