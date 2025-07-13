@@ -70,34 +70,46 @@
                         tabindex="0"></iframe>
                 </div>
                 <div class="col-lg-4 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
-                    <form>
+                    <form id="contactForm">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" placeholder="Tu nombre">
+                                    <input type="text" class="form-control" id="name" placeholder="Tu nombre" required>
                                     <label for="name">Tu nombre</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" id="edad" placeholder="Tu edad" min="10" max="65">
+                                    <input type="number" class="form-control" id="edad" placeholder="Tu edad" min="10" max="65" required>
                                     <label for="edad">Tu edad</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="correo" placeholder="correo">
+                                    <input type="email" class="form-control" id="correo" placeholder="correo" required>
                                     <label for="correo">Tu Correo</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control mensaje-textarea" placeholder="Deja el mensaje aquí" id="mensaje"></textarea>
+                                    <textarea class="form-control mensaje-textarea" placeholder="Deja el mensaje aquí" id="mensaje" style="height: 150px" maxlength="500" required></textarea>
                                     <label for="mensaje">Mensaje</label>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Enviar Mensaje</button>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="locationConsent" checked>
+                                    <label class="form-check-label" for="locationConsent">
+                                        <small>Permitir compartir mi ubicación para mejorar el servicio</small>
+                                    </label>
+                                </div>
+                                <button class="btn btn-primary w-100 py-3" type="submit">
+                                    <i class="fa fa-paper-plane me-2"></i>Enviar Mensaje
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                             </div>
                         </div>
                     </form>

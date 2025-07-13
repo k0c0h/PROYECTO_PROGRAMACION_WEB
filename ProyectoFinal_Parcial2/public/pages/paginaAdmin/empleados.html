@@ -1,0 +1,90 @@
+<div id="publicView">
+    <!-- Header -->
+
+    <!-- Employee List -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Empleados</h6>
+                <h1 class="mb-5">Nuestro equipo de trabajo:</h1>
+            </div>
+            <div class="row g-4" id="publicEmployeeList"></div>
+            <div id="employeeError" class="text-danger text-center" style="display: none;">Error al cargar los empleados.</div>
+        </div>
+    </div>
+</div>
+
+<div id="adminView" style="display: none;">
+    <header class="bg-primary text-white text-center py-5">
+        <h1 class="m-0"><i class="fa fa-users me-3"></i>Mundo Papelito - Gestión de Empleados</h1>
+    </header>
+
+    <main class="container py-5">
+        <section class="row">
+            <article class="col-md-3">
+                <h2 class="mb-4">Agregar/Editar Empleado</h2>
+                <form id="employeeForm" class="p-4 bg-light rounded shadow">
+                    <input type="hidden" id="employeeId">
+                    <div class="mb-3">
+                        <label for="employeeName" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="employeeName" placeholder="Nombre del empleado" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeeEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="employeeEmail" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeePosition" class="form-label">Cargo</label>
+                        <select class="form-control" id="employeePosition" required>
+                            <option value="">Seleccionar cargo</option>
+                            <option value="Vendedor">Vendedor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeeUsername" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="employeeUsername" placeholder="Nombre de usuario" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeePassword" class="form-label">Contraseña</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="employeePassword" placeholder="Contraseña" required>
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                <i class="fa fa-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeePhoto" class="form-label">Foto</label>
+                        <input type="file" class="form-control" id="employeePhoto" accept="image/*">
+                        <button type="button" id="startCamera" class="btn btn-primary w-100 mt-2">Abrir Cámara</button>
+                        <video id="employeeCamera" class="img-fluid mt-2" style="display: none;" autoplay></video>
+                        <canvas id="employeeCanvas" style="display: none;"></canvas>
+                        <button type="button" id="capturePhoto" class="btn btn-success w-100 mt-2" style="display: none;">Capturar Foto</button>
+                        <img id="employeePhotoPreview" class="img-fluid mt-2" style="max-height: 100px; display: none;" alt="Vista previa">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Guardar Empleado</button>
+                    <button type="button" id="cancelEdit" class="btn btn-secondary w-100 mt-2" style="display: none;">Cancelar Edición</button>
+                </form>
+            </article>
+            <article class="col-md-9">
+                <h2 class="mb-4">Lista de Empleados</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Cargo</th>
+                                <th>Usuario</th>
+                                <th>Contraseña</th>
+                                <th>Foto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeTableBody"></tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>

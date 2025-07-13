@@ -30,9 +30,10 @@ window.initFacturas = function () {
     const modalIva = document.getElementById('modalIva');
     const modalTotal = document.getElementById('modalTotal');
     const saveInvoiceButton = document.getElementById('saveInvoice');
+    const downloadPDFButton = document.getElementById('downloadPDF');
 
     // Check if required elements exist
-    if (!publicView || !adminView || !clientSelect || !clientInfo || !clientNameSpan || !clientEmailSpan || !productSelect || !productQuantity || !addProductButton || !invoiceTableBody || !subtotalSpan || !ivaSpan || !totalSpan || !generateInvoiceButton || !modalInvoiceTableBody || !modalSubtotal || !modalIva || !modalTotal || !saveInvoiceButton) {
+    if (!publicView || !adminView || !clientSelect || !clientInfo || !clientNameSpan || !clientEmailSpan || !productSelect || !productQuantity || !addProductButton || !invoiceTableBody || !subtotalSpan || !ivaSpan || !totalSpan || !generateInvoiceButton || !modalInvoiceTableBody || !modalSubtotal || !modalIva || !modalTotal || !saveInvoiceButton || !downloadPDFButton) {
         console.error('[Facturas] Error: One or more DOM elements not found', {
             publicView: !!publicView,
             adminView: !!adminView,
@@ -52,16 +53,19 @@ window.initFacturas = function () {
             modalSubtotal: !!modalSubtotal,
             modalIva: !!modalIva,
             modalTotal: !!modalTotal,
-            saveInvoiceButton: !!saveInvoiceButton
+            saveInvoiceButton: !!saveInvoiceButton,
+            downloadPDFButton: !!downloadPDFButton
         });
         return;
     }
 
-    // Toggle views based on admin session
-    const isAdmin = localStorage.getItem('adminSession') === 'loggedIn';
-    console.log('[Facturas] adminSession:', isAdmin);
-    publicView.style.display = isAdmin ? 'none' : 'block';
-    adminView.style.display = isAdmin ? 'block' : 'none';
+    // Always show admin view for factura functionality (accessible to all users)
+    const hasValidSession = localStorage.getItem('adminSession') === 'loggedIn' || localStorage.getItem('vendorSession') === 'loggedIn';
+    console.log('[Facturas] hasValidSession:', hasValidSession);
+    
+    // Show admin view if user has any valid session, otherwise show public view
+    publicView.style.display = hasValidSession ? 'none' : 'block';
+    adminView.style.display = hasValidSession ? 'block' : 'none';
     console.log('[Facturas] publicView display:', publicView.style.display);
     console.log('[Facturas] adminView display:', adminView.style.display);
 
@@ -107,15 +111,15 @@ window.initFacturas = function () {
         const quantity = parseInt(productQuantity.value);
         const product = products.find(p => p.id === productId);
         if (!productId || !quantity || quantity < 1) {
-            alert('Por favor, selecciona un producto y una cantidad válida.');
+            showAlert('Por favor, selecciona un producto y una cantidad válida.', 'Campos requeridos', 'warning');
             return;
         }
         if (!product) {
-            alert('Producto no encontrado.');
+            showAlert('Producto no encontrado.', 'Error', 'error');
             return;
         }
         if (quantity > product.quantity) {
-            alert(`No hay suficiente inventario. Cantidad disponible: ${product.quantity}`);
+            showAlert(`No hay suficiente inventario. Cantidad disponible: ${product.quantity}`, 'Inventario insuficiente', 'warning');
             return;
         }
         invoiceItems.push({
@@ -175,7 +179,7 @@ window.initFacturas = function () {
         const clientId = clientSelect.value;
         const client = clients.find(c => c.id === clientId);
         if (!client) {
-            alert('Por favor, selecciona un cliente.');
+            showAlert('Por favor, selecciona un cliente.', 'Cliente requerido', 'warning');
             return;
         }
 
@@ -254,6 +258,124 @@ window.initFacturas = function () {
         // Notify productos.js to refresh (if loaded)
         if (typeof window.initProductos === 'function') {
             window.initProductos();
+        }
+    });
+
+    // Generate and download PDF invoice
+    downloadPDFButton.addEventListener('click', () => {
+        const clientId = clientSelect.value;
+        const client = clients.find(c => c.id === clientId);
+        
+        if (!client || invoiceItems.length === 0) {
+            showAlert('Error: No hay datos de factura para generar el PDF.', 'Error', 'error');
+            return;
+        }
+
+        try {
+            // Create new jsPDF instance
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Set font
+            doc.setFont('helvetica');
+            
+            // Header
+            doc.setFontSize(20);
+            doc.setTextColor(40, 40, 40);
+            doc.text('MUNDO PAPELITO', 20, 30);
+            
+            doc.setFontSize(14);
+            doc.text('FACTURA DE VENTA', 20, 40);
+            
+            // Company info
+            doc.setFontSize(10);
+            doc.text('Ciudad alegria, Llano Grande, Calle Cuba y Guatemala', 20, 50);
+            doc.text('Teléfono: +593 96 421 0021', 20, 55);
+            doc.text('Email: papel@gmail.com', 20, 60);
+            
+            // Invoice number and date
+            const invoiceNumber = '_' + Math.random().toString(36).substr(2, 9);
+            const currentDate = new Date().toLocaleDateString('es-ES');
+            doc.text(`Factura No: ${invoiceNumber}`, 120, 50);
+            doc.text(`Fecha: ${currentDate}`, 120, 55);
+            
+            // Client info
+            doc.setFontSize(12);
+            doc.text('DATOS DEL CLIENTE:', 20, 80);
+            doc.setFontSize(10);
+            doc.text(`Nombre: ${client.name}`, 20, 90);
+            doc.text(`Email: ${client.email}`, 20, 95);
+            
+            // Line separator
+            doc.line(20, 105, 190, 105);
+            
+            // Table headers
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('PRODUCTO', 20, 115);
+            doc.text('PRECIO', 80, 115);
+            doc.text('CANT.', 120, 115);
+            doc.text('TOTAL', 160, 115);
+            
+            // Line under headers
+            doc.line(20, 120, 190, 120);
+            
+            // Table content
+            doc.setFont('helvetica', 'normal');
+            let yPosition = 130;
+            let subtotal = 0;
+            
+            invoiceItems.forEach(item => {
+                doc.text(item.name.substring(0, 30), 20, yPosition); // Limit product name length
+                doc.text(`$${item.price.toFixed(2)}`, 80, yPosition);
+                doc.text(item.quantity.toString(), 120, yPosition);
+                doc.text(`$${item.amount.toFixed(2)}`, 160, yPosition);
+                subtotal += item.amount;
+                yPosition += 10;
+                
+                // Add new page if content is too long
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+            });
+            
+            // Totals
+            const iva = subtotal * 0.12;
+            const total = subtotal + iva;
+            
+            yPosition += 10;
+            doc.line(20, yPosition, 190, yPosition);
+            yPosition += 10;
+            
+            doc.setFont('helvetica', 'bold');
+            doc.text('SUBTOTAL:', 120, yPosition);
+            doc.text(`$${subtotal.toFixed(2)}`, 160, yPosition);
+            yPosition += 10;
+            
+            doc.text('IVA (12%):', 120, yPosition);
+            doc.text(`$${iva.toFixed(2)}`, 160, yPosition);
+            yPosition += 10;
+            
+            doc.text('TOTAL:', 120, yPosition);
+            doc.text(`$${total.toFixed(2)}`, 160, yPosition);
+            
+            // Footer
+            yPosition += 20;
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Gracias por su compra', 20, yPosition);
+            doc.text('Esta es una factura generada automáticamente', 20, yPosition + 5);
+            
+            // Download PDF
+            const fileName = `Factura_${client.name.replace(/\s+/g, '_')}_${currentDate.replace(/\//g, '-')}.pdf`;
+            doc.save(fileName);
+            
+            console.log('[Facturas] PDF generated and downloaded successfully');
+            
+        } catch (error) {
+            console.error('[Facturas] Error generating PDF:', error);
+            showAlert('Error al generar el PDF. Por favor, inténtelo de nuevo.', 'Error', 'error');
         }
     });
 

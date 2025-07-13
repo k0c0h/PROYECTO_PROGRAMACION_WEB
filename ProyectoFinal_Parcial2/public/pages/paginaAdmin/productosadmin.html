@@ -1,0 +1,61 @@
+<header class="bg-primary text-white text-center py-5">
+    <h1 class="m-0"><i class="fa fa-book me-3"></i>Mundo Papelito - Gestión de Productos</h1>
+</header>
+
+<main class="container py-5">
+    <section class="row">
+        <article class="col-md-4">
+            <h2 class="mb-4">Agregar/Editar Producto</h2>
+            <form id="productForm" class="p-4 bg-light rounded shadow">
+                <input type="hidden" id="productId">
+                <div class="mb-3">
+                    <label for="productName" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="productName" placeholder="Nombre del producto" required>
+                </div>
+                <div class="mb-3">
+                    <label for="productPrice" class="form-label">Precio</label>
+                    <input type="number" class="form-control" id="productPrice" placeholder="Precio" step="0.01" required>
+                </div>
+                <div class="mb-3">
+                    <label for="productQuantity" class="form-label">Cantidad en Inventario</label>
+                    <input type="number" class="form-control" id="productQuantity" placeholder="Cantidad" min="0" required>
+                </div>
+                <div class="mb-3">
+                    <label for="productImage" class="form-label">Imagen</label>
+                    <input type="file" class="form-control" id="productImage" accept="image/*">
+                    <button type="button" id="startCamera" class="btn btn-primary w-100 mt-2">Abrir Cámara</button>
+                    <video id="productCamera" class="img-fluid mt-2" style="display: none;" autoplay></video>
+                    <canvas id="productCanvas" style="display: none;"></canvas>
+                    <button type="button" id="capturePhoto" class="btn btn-success w-100 mt-2" style="display: none;">Capturar Foto</button>
+                    <img id="productImagePreview" class="img-fluid mt-2" style="max-height: 100px; display: none;" alt="Vista previa">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Guardar Producto</button>
+                <button type="button" id="cancelEdit" class="btn btn-secondary w-100 mt-2" style="display: none;">Cancelar Edición</button>
+            </form>
+        </article>
+        <article class="col-md-8">
+            <h2 class="mb-4">Lista de Productos</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Imagen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody"></tbody>
+                </table>
+            </div>
+            <div id="productError" class="text-danger text-center mt-3" style="display: none;">Error al cargar los productos.</div>
+        </article>
+    </section>
+</main>
+
+<!-- Hidden elements for SPA compatibility -->
+<div id="publicView" style="display: none;">
+    <div id="publicProductList"></div>
+</div>
+<div id="adminView" style="display: none;"></div>

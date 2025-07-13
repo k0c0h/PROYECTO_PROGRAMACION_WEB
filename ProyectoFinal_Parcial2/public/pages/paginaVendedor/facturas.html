@@ -21,8 +21,12 @@
         <div class="container">
             <div class="text-center">
                 <h6 class="section-title bg-white text-center text-primary px-3">Facturación</h6>
-                <h1 class="mb-5">Acceso Restringido</h1>
-                <p class="text-danger">Por favor, inicia sesión como administrador para generar facturas.</p>
+                <h1 class="mb-5">Sistema de Facturación</h1>
+                <p class="text-info">Gestiona y genera facturas de manera eficiente para tus clientes.</p>
+                <div class="mt-4">
+                    <p class="text-muted">Para acceder al sistema de facturación, inicia sesión con tus credenciales.</p>
+                    <a href="../login/login.html" class="btn btn-primary py-3 px-5">Iniciar Sesión</a>
+                </div>
             </div>
         </div>
     </div>
@@ -145,6 +149,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" id="downloadPDF" class="btn btn-info">
+                        <i class="fa fa-download me-2"></i>Descargar PDF
+                    </button>
                     <button type="button" id="saveInvoice" class="btn btn-primary">Guardar Factura</button>
                 </div>
             </div>

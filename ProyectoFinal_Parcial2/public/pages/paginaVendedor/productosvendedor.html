@@ -1,0 +1,45 @@
+<div id="publicView">
+    <!-- Header -->
+
+
+    <!-- Product List -->
+    <div class="container-xxl py-5 category">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Productos</h6>
+                <h1 class="mb-5">Nuestros productos disponibles:</h1>
+            </div>
+            <div class="row g-4" id="publicProductList"></div>
+            <div id="productError" class="text-danger text-center" style="display: none;">Error al cargar los productos.</div>
+        </div>
+    </div>
+</div>
+
+<div id="adminView" style="display: none;">
+    <header class="bg-primary text-white text-center py-5">
+        <h1 class="m-0"><i class="fa fa-book me-3"></i>Mundo Papelito - Consulta de Productos (Solo Lectura)</h1>
+    </header>
+
+    <main class="container py-5">
+        <section class="row">
+            <article class="col-12">
+                <h2 class="mb-4">Lista de Productos - Solo Consulta</h2>
+                <div class="alert alert-info">
+                    <i class="fa fa-info-circle me-2"></i>
+                    <strong>Modo Solo Lectura:</strong> Como vendedor, puedes consultar el inventario pero no modificar productos. Contacta al administrador para cambios en el inventario.
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Imagen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody"></tbody>
+                </table>
+            </article>
+        </section>
+    </main>
+</div>

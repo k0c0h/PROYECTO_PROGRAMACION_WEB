@@ -1,17 +1,69 @@
 console.log('[Clientes] Script loaded');
 
+// Global function to clean localStorage manually
+window.cleanLocalStorageClients = function() {
+    console.log('[Clientes] Cleaning localStorage clients manually...');
+    
+    let clients = JSON.parse(localStorage.getItem('clients')) || [];
+    console.log('[Clientes] Before cleaning:', clients);
+    
+    // Filter out empty or invalid clients
+    const cleanedClients = clients.filter(client => {
+        return client && 
+               typeof client === 'object' && 
+               client.id && 
+               client.name && 
+               client.email &&
+               client.name.trim() !== '' &&
+               client.email.trim() !== '';
+    });
+    
+    console.log('[Clientes] After cleaning:', cleanedClients);
+    console.log('[Clientes] Removed', clients.length - cleanedClients.length, 'corrupted entries');
+    
+    localStorage.setItem('clients', JSON.stringify(cleanedClients));
+    
+    if (typeof window.initClientes === 'function') {
+        window.initClientes();
+    }
+    
+    return cleanedClients;
+};
+
 window.initClientes = function () {
     console.log('[Clientes] initClientes called, initializing clients');
 
     // Initial client data
     const initialClients = [
-        { id: '_1', name: 'Juan Pérez', email: 'juan.perez@example.com', photo: './public/img/client1.jpg' },
-        { id: '_2', name: 'María Gómez', email: 'maria.gomez@example.com', photo: './public/img/client2.jpg' },
-        { id: '_3', name: 'Carlos López', email: 'carlos.lopez@example.com', photo: './public/img/client3.jpg' }
+        // Array vacío - los clientes se agregarán dinámicamente
     ];
+
+    // Function to clean corrupted clients
+    function cleanCorruptedClients(clients) {
+        return clients.filter(client => {
+            // Remove clients that are empty objects or missing required fields
+            return client && 
+                   typeof client === 'object' && 
+                   client.id && 
+                   client.name && 
+                   client.email &&
+                   client.name.trim() !== '' &&
+                   client.email.trim() !== '';
+        });
+    }
 
     // Initialize clients in localStorage if empty
     let clients = JSON.parse(localStorage.getItem('clients')) || [];
+    
+    // Clean corrupted clients
+    const originalLength = clients.length;
+    clients = cleanCorruptedClients(clients);
+    
+    if (clients.length !== originalLength) {
+        console.log('[Clientes] Cleaned corrupted clients:', originalLength - clients.length, 'removed');
+        localStorage.setItem('clients', JSON.stringify(clients));
+    }
+    
     if (clients.length === 0) {
         clients = initialClients;
         localStorage.setItem('clients', JSON.stringify(clients));
@@ -65,13 +117,26 @@ window.initClientes = function () {
     // Public view: Render clients
     function renderPublicClients() {
         publicClientList.innerHTML = '';
-        if (clients.length === 0) {
-            console.warn('[Clientes] Warning: No clients found in localStorage');
+        
+        // Filter valid clients before rendering
+        const validClients = clients.filter(client => {
+            return client && 
+                   typeof client === 'object' && 
+                   client.id && 
+                   client.name && 
+                   client.email &&
+                   client.name.trim() !== '' &&
+                   client.email.trim() !== '';
+        });
+        
+        if (validClients.length === 0) {
+            console.warn('[Clientes] Warning: No valid clients found');
             clientError.textContent = 'No hay clientes disponibles.';
             clientError.style.display = 'block';
             return;
         }
-        clients.forEach((client, index) => {
+        
+        validClients.forEach((client, index) => {
             const delay = (index % 4) * 0.2 + 0.1;
             const div = document.createElement('div');
             div.className = `col-lg-3 col-md-6 wow fadeInUp`;
@@ -79,7 +144,7 @@ window.initClientes = function () {
             div.innerHTML = `
                 <div class="team-item bg-light">
                     <div class="overflow-hidden">
-                        <img class="img-fluid" src="${client.photo || './public/img/default-client.jpg'}" alt="${client.name}">
+                        <img class="img-fluid" src="${client.photo || '../../img/default-client.jpg'}" alt="${client.name}">
                     </div>
                     <div class="text-center p-4">
                         <h5 class="mb-0">${client.name}</h5>
@@ -92,27 +157,39 @@ window.initClientes = function () {
             publicClientList.appendChild(div);
         });
         clientError.style.display = 'none';
-        console.log('[Clientes] Public clients rendered:', clients.length);
+        console.log('[Clientes] Public clients rendered:', validClients.length);
     }
 
     // Admin view: Render client table
     function renderAdminClients() {
         if (!localStorage.getItem('adminSession')) return;
         clientTableBody.innerHTML = '';
-        clients.forEach(client => {
+        
+        // Filter valid clients before rendering
+        const validClients = clients.filter(client => {
+            return client && 
+                   typeof client === 'object' && 
+                   client.id && 
+                   client.name && 
+                   client.email &&
+                   client.name.trim() !== '' &&
+                   client.email.trim() !== '';
+        });
+        
+        validClients.forEach(client => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${client.name}</td>
                 <td>${client.email}</td>
-                <td><img src="${client.photo || './public/img/default-client.jpg'}" class="img-fluid" style="max-height: 50px;" alt="Cliente"></td>
+                <td><img src="${client.photo || '../../img/default-client.jpg'}" class="img-fluid" style="max-height: 50px;" alt="Cliente"></td>
                 <td>
-                    <button class="btn btn-warning btn-sm" onclick="editClient('${client.id}')">Editar</button>
+                    <button class="btn btn-warning btn-sm me-2" onclick="editClient('${client.id}')">Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteClient('${client.id}')">Eliminar</button>
                 </td>
             `;
             clientTableBody.appendChild(row);
         });
-        console.log('[Clientes] Admin clients rendered:', clients.length);
+        console.log('[Clientes] Admin clients rendered:', validClients.length);
     }
 
     // Generate unique ID
@@ -245,7 +322,7 @@ window.initClientes = function () {
 
     // Delete client
     window.deleteClient = function (id) {
-        if (confirm('¿Estás seguro de eliminar este cliente?')) {
+        showConfirm('¿Estás seguro de eliminar este cliente?', function() {
             clients = clients.filter(c => c.id !== id);
             localStorage.setItem('clients', JSON.stringify(clients));
             renderPublicClients();
@@ -253,7 +330,7 @@ window.initClientes = function () {
             if (Notification.permission === 'granted') {
                 new Notification('Cliente eliminado', { body: 'El cliente ha sido eliminado.' });
             }
-        }
+        });
     };
 
     // Cancel edit

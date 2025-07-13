@@ -1,8 +1,6 @@
 window.cargarPaginas = function (pagina) {
     const protectedPages = ['pages/productos.html', 'pages/clientes.html', 'pages/facturas.html'];
-    const publicPages = ['pages/productosindex.html']; // Páginas públicas que no requieren autenticación
     const isProtectedPage = protectedPages.includes(pagina);
-    const isPublicPage = publicPages.includes(pagina);
 
     if (isProtectedPage && !localStorage.getItem('adminSession')) {
         console.warn('[Cargador] Acceso denegado, redirigiendo a login');
@@ -11,11 +9,26 @@ window.cargarPaginas = function (pagina) {
 
     let url;
     if (pagina === 'index') {
-        url = './public/pages/inicio.html';
+        url = './inicio.html';
+    } else if (pagina === 'pages/productos.html') {
+        // Usar productosadmin.html para administradores
+        url = './productosadmin.html';
+    } else if (pagina === 'pages/clientes.html') {
+        // Usar clientes.html para administradores
+        url = './clientes.html';
+    } else if (pagina === 'pages/empleados.html') {
+        // Usar empleados.html para administradores
+        url = './empleados.html';
+    } else if (pagina === 'pages/facturas.html') {
+        // Usar facturas.html para administradores
+        url = './facturas.html';
     } else if (pagina.includes('/')) {
-        url = './public/' + pagina;
+        url = '../' + pagina;
+    } else if (pagina.endsWith('.html')) {
+        // Si es un archivo HTML en la misma carpeta
+        url = './' + pagina;
     } else {
-        url = './public/pages/' + pagina;
+        url = '../pages/' + pagina;
     }
 
     fetch(url)
@@ -41,34 +54,11 @@ window.cargarPaginas = function (pagina) {
                 }, 200);
             }
 
-            // Inicializar contact si se cargó contact.html
-            if (url.includes('contact.html') && typeof window.initContact === 'function') {
+            // Inicializar productos si se cargó productosadmin.html
+            if (url.includes('productosadmin.html') && typeof window.initProductos === 'function') {
                 setTimeout(() => {
-                    window.initContact();
-                }, 200);
-            }
-
-            // Inicializar el formulario de login si se cargó login.html
-            if (url.includes('login.html') && typeof window.initLogin === 'function') {
-                setTimeout(() => {
-                    window.initLogin();
-                    console.log('[Cargador] initLogin called for login.html');
-                }, 200);
-            }
-
-            // Inicializar productos si se cargó productos.html o productosindex.html
-            if ((url.includes('productos.html') || url.includes('productosindex.html')) && typeof window.initProductos === 'function') {
-                setTimeout(() => {
-                    // Set a flag for public access if loading productosindex.html
-                    if (url.includes('productosindex.html')) {
-                        window.isPublicProductAccess = true;
-                        console.log('[Cargador] Setting public product access flag');
-                    } else {
-                        window.isPublicProductAccess = false;
-                    }
-                    
                     window.initProductos();
-                    console.log('[Cargador] initProductos called for productos page');
+                    console.log('[Cargador] initProductos called for productosadmin.html');
                 }, 200);
             }
 
@@ -80,11 +70,35 @@ window.cargarPaginas = function (pagina) {
                 }, 200);
             }
 
+            // Inicializar empleados si se cargó empleados.html
+            if (url.includes('empleados.html') && typeof window.initEmpleados === 'function') {
+                setTimeout(() => {
+                    window.initEmpleados();
+                    console.log('[Cargador] initEmpleados called for empleados.html');
+                }, 200);
+            }
+
             // Inicializar facturas si se cargó facturas.html
             if (url.includes('facturas.html') && typeof window.initFacturas === 'function') {
                 setTimeout(() => {
                     window.initFacturas();
                     console.log('[Cargador] initFacturas called for facturas.html');
+                }, 200);
+            }
+
+            // Inicializar opiniones si se cargó opiniones.html
+            if (url.includes('opiniones.html') && typeof window.initOpiniones === 'function') {
+                setTimeout(() => {
+                    window.initOpiniones();
+                    console.log('[Cargador] initOpiniones called for opiniones.html');
+                }, 200);
+            }
+
+            // Inicializar contact si se cargó contact.html
+            if (url.includes('contact.html') && typeof window.initContact === 'function') {
+                setTimeout(() => {
+                    window.initContact();
+                    console.log('[Cargador] initContact called for contact.html');
                 }, 200);
             }
         })
@@ -96,7 +110,7 @@ window.cargarPaginas = function (pagina) {
 
 // Cargar página de inicio al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('./public/pages/inicio.html')
+    fetch('./inicio.html')
         .then(response => response.text())
         .then(data => {
             document.getElementById('contenedorprincipal').innerHTML = data;

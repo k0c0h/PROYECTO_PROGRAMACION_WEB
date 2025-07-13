@@ -1,0 +1,62 @@
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Nuestros productos</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Productos</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<div id="publicView">
+    <!-- Product List -->
+    <div class="container-xxl py-5 category">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Inventario</h6>
+                <h1 class="mb-5">Nuestros productos en venta:</h1>
+            </div>
+            <div class="row g-4" id="publicProductList"></div>
+            <div id="productError" class="text-danger text-center" style="display: none;">Error al cargar los productos.</div>
+        </div>
+    </div>
+</div>
+
+<div id="adminView" style="display: none;">
+    <header class="bg-primary text-white text-center py-5">
+        <h1 class="m-0"><i class="fa fa-book me-3"></i>Mundo Papelito - Consulta de Productos (Vendedor)</h1>
+    </header>
+
+    <main class="container py-5">
+        <section class="row">
+            <article class="col-md-12">
+                <h2 class="mb-4">Lista de Productos</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Imagen</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody"></tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

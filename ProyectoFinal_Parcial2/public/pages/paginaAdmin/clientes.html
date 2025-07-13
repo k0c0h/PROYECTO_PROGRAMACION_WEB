@@ -1,0 +1,65 @@
+<div id="publicView">
+    <!-- Header -->
+
+    <!-- Client List -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Clientes</h6>
+                <h1 class="mb-5">Nuestros clientes registrados:</h1>
+            </div>
+            <div class="row g-4" id="publicClientList"></div>
+            <div id="clientError" class="text-danger text-center" style="display: none;">Error al cargar los clientes.</div>
+        </div>
+    </div>
+</div>
+
+<div id="adminView" style="display: none;">
+    <header class="bg-primary text-white text-center py-5">
+        <h1 class="m-0"><i class="fa fa-book me-3"></i>Mundo Papelito - Gestión de Clientes</h1>
+    </header>
+
+    <main class="container py-5">
+        <section class="row">
+            <article class="col-md-4">
+                <h2 class="mb-4">Agregar/Editar Cliente</h2>
+                <form id="clientForm" class="p-4 bg-light rounded shadow">
+                    <input type="hidden" id="clientId">
+                    <div class="mb-3">
+                        <label for="clientName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="clientName" placeholder="Nombre del cliente" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="clientEmail" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientPhoto" class="form-label">Foto</label>
+                        <input type="file" class="form-control" id="clientPhoto" accept="image/*">
+                        <button type="button" id="startCamera" class="btn btn-primary w-100 mt-2">Abrir Cámara</button>
+                        <video id="clientCamera" class="img-fluid mt-2" style="display: none;" autoplay></video>
+                        <canvas id="clientCanvas" style="display: none;"></canvas>
+                        <button type="button" id="capturePhoto" class="btn btn-success w-100 mt-2" style="display: none;">Capturar Foto</button>
+                        <img id="clientPhotoPreview" class="img-fluid mt-2" style="max-height: 100px; display: none;" alt="Vista previa">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Guardar Cliente</button>
+                    <button type="button" id="cancelEdit" class="btn btn-secondary w-100 mt-2" style="display: none;">Cancelar Edición</button>
+                </form>
+            </article>
+            <article class="col-md-8">
+                <h2 class="mb-4">Lista de Clientes</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Foto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody"></tbody>
+                </table>
+            </article>
+        </section>
+    </main>
+</div>

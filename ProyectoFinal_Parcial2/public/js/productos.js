@@ -5,9 +5,22 @@ window.initProductos = function () {
 
     // Initial product data
     const initialProducts = [
-        { id: '_1', name: 'Cuaderno', price: 10.99, quantity: 100, image: './public/img/product1.jpg' },
-        { id: '_2', name: 'Lápiz', price: 1.99, quantity: 200, image: './public/img/product2.jpg' },
-        { id: '_3', name: 'Borrador', price: 0.99, quantity: 150, image: './public/img/product3.jpg' }
+        { id: '_1', name: 'Lápices', price: 1.00, quantity: 100, image: './public/img/lapices.jpg' },
+        { id: '_2', name: 'Cuadernos', price: 2.50, quantity: 200, image: './public/img/cuadernos.jpg' },
+        { id: '_3', name: 'Resaltadores', price: 1.50, quantity: 150, image: './public/img/resaltadores.jpg' },
+        { id: '_4', name: 'Gomas de borrar', price: 0.50, quantity: 300, image: './public/img/borrador.jpg' },
+        { id: '_5', name: 'Carpetas', price: 3.00, quantity: 80, image: './public/img/carpetas.jpg' },
+        { id: '_6', name: 'Marcadores permanentes', price: 2.00, quantity: 120, image: './public/img/marcador.jpg' },
+        { id: '_7', name: 'Tijeras', price: 1.75, quantity: 90, image: './public/img/tijera.jpg' },
+        { id: '_8', name: 'Esferos', price: 0.75, quantity: 250, image: './public/img/esferos.png' },
+        { id: '_9', name: 'Mochilas escolares', price: 15.00, quantity: 50, image: './public/img/mochila.jpg' },
+        { id: '_10', name: 'Pizarras de corcho', price: 10.00, quantity: 30, image: './public/img/pizarrac.jpg' },
+        { id: '_11', name: 'Reglas de geometría', price: 0.80, quantity: 200, image: './public/img/reglas.jpg' },
+        { id: '_12', name: 'Sacapuntas', price: 0.50, quantity: 150, image: './public/img/sacapuntas.jpg' },
+        { id: '_13', name: 'Lienzos para pintar', price: 5.00, quantity: 60, image: './public/img/lienzos.jpg' },
+        { id: '_14', name: 'Temperas de pintura', price: 4.00, quantity: 100, image: './public/img/temperas.jpg' },
+        { id: '_15', name: 'Grapadoras', price: 3.50, quantity: 70, image: './public/img/grapadora.jpg' },
+        { id: '_16', name: 'Paquetes de hojas', price: 2.25, quantity: 120, image: './public/img/paqueteshoja.jpg' }
     ];
 
     // Initialize products in localStorage if empty
@@ -16,9 +29,17 @@ window.initProductos = function () {
         products = initialProducts;
         localStorage.setItem('products', JSON.stringify(products));
     } else {
-        // Ensure existing products have quantity field
-        products = products.map(p => ({ ...p, quantity: p.quantity || 0 }));
-        localStorage.setItem('products', JSON.stringify(products));
+        // Force update with new image paths (check for old relative paths)
+        const needsUpdate = products.some(p => p.image && (p.image.includes('../../img/') || !p.image.includes('./public/img/')));
+        if (needsUpdate) {
+            console.log('[Productos] Updating image paths...');
+            products = initialProducts;
+            localStorage.setItem('products', JSON.stringify(products));
+        } else {
+            // Ensure existing products have quantity field
+            products = products.map(p => ({ ...p, quantity: p.quantity || 0 }));
+            localStorage.setItem('products', JSON.stringify(products));
+        }
     }
     console.log('[Productos] Products loaded:', products);
 
@@ -38,43 +59,69 @@ window.initProductos = function () {
     const productCamera = document.getElementById('productCamera');
     const productCanvas = document.getElementById('productCanvas');
 
+    // Determine if we're in admin-only page (like productosadmin.html)
+    const isAdminOnlyPage = !publicView || !adminView || publicView.style.display === 'none';
+    
+    console.log('[Productos] Page type detected:', isAdminOnlyPage ? 'Admin-only page' : 'Standard SPA page');
+
     // Check if required elements exist
-    if (!publicView || !adminView || !publicProductList || !productError || !productForm || !productTableBody || !productQuantityInput || !startCameraButton || !capturePhotoButton || !productCamera || !productCanvas) {
-        console.error('[Productos] Error: One or more DOM elements not found', {
-            publicView: !!publicView,
-            adminView: !!adminView,
-            publicProductList: !!publicProductList,
-            productError: !!productError,
-            productForm: !!productForm,
+    if (!productTableBody || !productError) {
+        console.error('[Productos] Error: Essential DOM elements not found', {
             productTableBody: !!productTableBody,
-            productQuantityInput: !!productQuantityInput,
-            startCameraButton: !!startCameraButton,
-            capturePhotoButton: !!capturePhotoButton,
-            productCamera: !!productCamera,
-            productCanvas: !!productCanvas
+            productError: !!productError
         });
         if (productError) {
-            productError.textContent = 'Error: No se encontraron los elementos de la página.';
+            productError.textContent = 'Error: No se encontraron los elementos esenciales de la página.';
             productError.style.display = 'block';
         }
         return;
     }
 
-    // Toggle views based on admin session
-    const isAdmin = localStorage.getItem('adminSession') === 'loggedIn';
-    console.log('[Productos] adminSession:', isAdmin);
-    publicView.style.display = isAdmin ? 'none' : 'block';
-    adminView.style.display = isAdmin ? 'block' : 'none';
-    console.log('[Productos] publicView display:', publicView.style.display);
-    console.log('[Productos] adminView display:', adminView.style.display);
+    // Optional elements (may not exist in some views)
+    const hasFormElements = productForm && productQuantityInput && startCameraButton && capturePhotoButton && productCamera && productCanvas;
+    
+    console.log('[Productos] Form elements available:', hasFormElements);
+
+    // Toggle views based on admin or vendor session (only for SPA pages)
+    if (!isAdminOnlyPage && publicView && adminView) {
+        const isAdmin = localStorage.getItem('adminSession') === 'loggedIn';
+        const isVendor = localStorage.getItem('vendorSession') === 'loggedIn';
+        const isEmployee = localStorage.getItem('currentEmployee');
+        const isLoggedIn = isAdmin || isVendor || isEmployee;
+        
+        console.log('[Productos] adminSession:', isAdmin);
+        console.log('[Productos] vendorSession:', isVendor);
+        console.log('[Productos] currentEmployee:', !!isEmployee);
+        console.log('[Productos] isLoggedIn:', isLoggedIn);
+        console.log('[Productos] isPublicProductAccess:', window.isPublicProductAccess);
+        
+        // Always show public view
+        publicView.style.display = 'block';
+        
+        // Only show admin view if logged in AND NOT in public access mode
+        const shouldShowAdminView = isLoggedIn && !window.isPublicProductAccess;
+        adminView.style.display = shouldShowAdminView ? 'block' : 'none';
+        
+        console.log('[Productos] publicView display:', publicView.style.display);
+        console.log('[Productos] adminView display:', adminView.style.display);
+        console.log('[Productos] shouldShowAdminView:', shouldShowAdminView);
+    }
 
     // Public view: Render products
     function renderPublicProducts() {
+        // Skip if no publicProductList element or in admin-only page
+        if (!publicProductList || isAdminOnlyPage) {
+            console.log('[Productos] Skipping public products render - admin-only page');
+            return;
+        }
+        
         publicProductList.innerHTML = '';
         if (products.length === 0) {
             console.warn('[Productos] Warning: No products found in localStorage');
-            productError.textContent = 'No hay productos disponibles.';
-            productError.style.display = 'block';
+            if (productError) {
+                productError.textContent = 'No hay productos disponibles.';
+                productError.style.display = 'block';
+            }
             return;
         }
         products.forEach((product, index) => {
@@ -85,7 +132,7 @@ window.initProductos = function () {
             div.innerHTML = `
                 <div class="team-item bg-light">
                     <div class="overflow-hidden">
-                        <img class="img-fluid" src="${product.image || './public/img/default-product.jpg'}" alt="${product.name}">
+                        <img class="img-fluid" src="${product.image || '../../img/cat-1.jpg'}" alt="${product.name}">
                     </div>
                     <div class="text-center p-4">
                         <h5 class="mb-0">${product.name}</h5>
@@ -98,29 +145,76 @@ window.initProductos = function () {
             `;
             publicProductList.appendChild(div);
         });
-        productError.style.display = 'none';
+        if (productError) productError.style.display = 'none';
         console.log('[Productos] Public products rendered:', products.length);
     }
 
     // Admin view: Render product table
     function renderAdminProducts() {
-        if (!localStorage.getItem('adminSession')) return;
+        // For admin-only pages, always render. For SPA pages, check sessions
+        const shouldRender = isAdminOnlyPage || 
+                           localStorage.getItem('adminSession') === 'loggedIn' || 
+                           localStorage.getItem('vendorSession') === 'loggedIn';
+        
+        if (!shouldRender) {
+            console.log('[Productos] Skipping admin products render - no valid session');
+            return;
+        }
+        
+        if (!productTableBody) {
+            console.warn('[Productos] productTableBody not found, skipping admin render');
+            return;
+        }
+        
         productTableBody.innerHTML = '';
+        const isAdmin = localStorage.getItem('adminSession') === 'loggedIn';
+        
         products.forEach(product => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${product.name}</td>
-                <td>$${product.price}</td>
-                <td>${product.quantity}</td>
-                <td><img src="${product.image || './public/img/default-product.jpg'}" class="img-fluid" style="max-height: 50px;" alt="Producto"></td>
-                <td>
-                    <button class="btn btn-warning btn-sm" onclick="editProduct('${product.id}')">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteProduct('${product.id}')">Eliminar</button>
-                </td>
-            `;
+            
+            // Determine stock status
+            let stockStatus = '';
+            let stockClass = '';
+            if (product.quantity > 50) {
+                stockStatus = 'En Stock';
+                stockClass = 'text-success';
+            } else if (product.quantity > 0) {
+                stockStatus = 'Bajo Stock';
+                stockClass = 'text-warning';
+            } else {
+                stockStatus = 'Agotado';
+                stockClass = 'text-danger';
+            }
+            
+            // Build row HTML based on user role or admin-only page
+            if (isAdmin || isAdminOnlyPage) {
+                // Admin view: Show all columns including actions
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>$${product.price}</td>
+                    <td>${product.quantity}</td>
+                    <td><img src="${product.image || '../../img/default-product.jpg'}" class="img-fluid" style="max-height: 50px;" alt="Producto"></td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editProduct('${product.id}')">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${product.id}')">Eliminar</button>
+                    </td>
+                `;
+            } else {
+                // Vendor view: Show products with status, no actions
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>$${product.price}</td>
+                    <td>${product.quantity}</td>
+                    <td><img src="${product.image || '../../img/default-product.jpg'}" class="img-fluid" style="max-height: 50px;" alt="Producto"></td>
+                    <td><span class="${stockClass}">${stockStatus}</span></td>
+                `;
+            }
+            
             productTableBody.appendChild(row);
         });
-        console.log('[Productos] Admin products rendered:', products.length);
+        
+        const userRole = isAdmin || isAdminOnlyPage ? 'Admin' : 'Vendor';
+        console.log(`[Productos] ${userRole} products rendered:`, products.length);
     }
 
     // Generate unique ID
@@ -244,10 +338,17 @@ window.initProductos = function () {
         });
     }
 
-    // Edit product
+    // Edit product (for admins or admin-only pages)
     window.editProduct = function (id) {
+        const canEdit = isAdminOnlyPage || localStorage.getItem('adminSession') === 'loggedIn';
+        if (!canEdit) {
+            console.warn('[Productos] Edit product access denied: Not an admin');
+            return;
+        }
+        
         const product = products.find(p => p.id === id);
         if (!product) return;
+        
         document.getElementById('productId').value = product.id;
         document.getElementById('productName').value = product.name;
         document.getElementById('productPrice').value = product.price;
@@ -259,9 +360,15 @@ window.initProductos = function () {
         if (cancelEditButton) cancelEditButton.style.display = 'block';
     };
 
-    // Delete product
+    // Delete product (for admins or admin-only pages)
     window.deleteProduct = function (id) {
-        if (confirm('¿Estás seguro de eliminar este producto?')) {
+        const canDelete = isAdminOnlyPage || localStorage.getItem('adminSession') === 'loggedIn';
+        if (!canDelete) {
+            console.warn('[Productos] Delete product access denied: Not an admin');
+            return;
+        }
+        
+        showConfirm('¿Estás seguro de eliminar este producto?', function() {
             products = products.filter(p => p.id !== id);
             localStorage.setItem('products', JSON.stringify(products));
             renderPublicProducts();
@@ -269,7 +376,7 @@ window.initProductos = function () {
             if (Notification.permission === 'granted') {
                 new Notification('Producto eliminado', { body: 'El producto ha sido eliminado.' });
             }
-        }
+        });
     };
 
     // Cancel edit

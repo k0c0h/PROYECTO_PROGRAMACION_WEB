@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <meta charset="utf-8">
+    <title>Página Principal | Mundo Papelito</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="../../img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="../../lib/animate/animate.min.css" rel="stylesheet">
+    <link href="../../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="../../css/style.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="../../../index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>Mundo Papelito</h2>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            <span class="visually-hidden">Toggle navigation</span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="#" class="nav-item nav-link active"></a>
+                <a href="#" class="nav-item nav-link"></a>
+                <a href="#" class="nav-item nav-link"></a>
+                <div class="nav-item dropdown">
+
+                </div>
+            </div>
+            <a href="../../../index.html" id="loginButton" class="btn btn-warning py-4 px-lg-5 d-none d-lg-block">Regresar<i class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row justify-content-center py-5">
+            <article class="col-md-6 col-lg-4">
+                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+                <form id="adminLoginForm" class="p-4 bg-light rounded shadow">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="username" placeholder="Ingrese su usuario" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="password" placeholder="Ingrese su contraseña" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                    <div id="errorMessage" class="text-danger mt-3 text-center" style="display: none;"></div>
+                </form>
+            </article>
+        </div>
+    </div>
+
+ <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../lib/wow/wow.min.js"></script>
+    <script src="../../lib/easing/easing.min.js"></script>
+    <script src="../../lib/waypoints/waypoints.min.js"></script>
+    <script src="../../lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="../../js/login.js"></script>
+    <!-- Template Javascript -->
+    <script src="../../js/main.js"></script>
+    <script>
+        // Initialize login functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initLogin === 'function') {
+                initLogin();
+            }
+        });
+    </script>
+</body>
+</html>
+</html>

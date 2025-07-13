@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Página Principal | Mundo Papelito</title>
+    <title>Página Principal | Administrador</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="./public/img/favicon.ico" rel="icon">
+    <link href="../../img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,14 +20,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="./public/lib/animate/animate.min.css" rel="stylesheet">
-    <link href="./public/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="../../lib/animate/animate.min.css" rel="stylesheet">
+    <link href="../../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="./public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="./public/css/style.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
 </head>
 <body>
     <!-- Spinner Start -->
@@ -39,11 +39,11 @@
     <!-- Spinner End -->
 
     <section id="menu_pagina"></section>
-    
+
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="#" onclick="cargarPaginas('index')" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>Mundo Papelito</h2>
+            <h2 class="m-0 text-danger"><i class="fa fa-book me-3"></i>Mundo Papelito | ADMIN </h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -51,19 +51,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="#" onclick="cargarPaginas('index')" class="nav-item nav-link active">Inicio</a>
-                <a href="#" onclick="cargarPaginas('pages/contact.html')" class="nav-item nav-link">Contacto</a>
-                <!-- <a href="#" class="nav-item nav-link" onclick="cargarPaginas('pages/facturas.html')">Facturación</a>  -->
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Inventario</a>
-                    <div class="dropdown-menu fade-down m-0">
-                        <a href="#" onclick="cargarPaginas('pages/productosindex.html')" class="dropdown-item">Productos</a>
-                    </div>
-                </div>
+                <a href="#" onclick="cargarPaginas('empleados.html')" class="nav-item nav-link">Empleados</a>                            
+                <a href="#" onclick="cargarPaginas('clientes.html')" class="nav-item nav-link">Clientes</a>                
+                <a href="#" onclick="cargarPaginas('productosadmin.html')" class="nav-item nav-link">Productos</a>
+                <a href="#" onclick="cargarPaginas('opiniones.html')" class="nav-item nav-link">Comentarios</a>
             </div>
-            <a href="./public/pages/login/login.html" id="loginButton" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Acceder al sistema<i class="fa fa-arrow-right ms-3"></i></a>
-            <!-- <a href="#" onclick="logout()" id="logoutButton" class="btn btn-danger py-4 px-lg-5 d-none d-lg-block" style="display: none;">Cerrar Sesión<i class="fa fa-sign-out-alt ms-3"></i></a>
-         --></div>
+            
+            <a href="../login/login.html" onclick="logout()" id="logoutButton" class="btn btn-danger py-4 px-lg-5 d-none d-lg-block">Cerrar Sesión<i class="fa fa-sign-out-alt ms-3"></i></a>
+        </div>
     </nav>
     <!-- Navbar End -->
 
@@ -95,22 +90,22 @@
                     <h4 class="text-white mb-3">Galería</h4>
                     <div class="row g-2 pt-2">
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="./public/img/course-1.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="../../img/course-1.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="./public/img/course-2.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="../../img/course-2.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="./public/img/course-3.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="../../img/course-3.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="./public/img/course-2.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="../../img/course-2.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="./public/img/course-3.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="../../img/course-3.jpg" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="./public/img/course-1.jpg" alt="">
+                            <img class="img-fluid bg-light p-1" src="../../img/course-1.jpg" alt="">
                         </div>
                     </div>
                 </div>
@@ -137,48 +132,57 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./public/lib/wow/wow.min.js"></script>
-    <script src="./public/lib/easing/easing.min.js"></script>
-    <script src="./public/lib/waypoints/waypoints.min.js"></script>
-    <script src="./public/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="../../lib/wow/wow.min.js"></script>
+    <script src="../../lib/easing/easing.min.js"></script>
+    <script src="../../lib/waypoints/waypoints.min.js"></script>
+    <script src="../../lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="./public/js/main.js"></script>
+    <script src="../../js/main.js"></script>
     <!-- Geolocation Javascript -->
-    <script src="./public/js/geolocation.js"></script>
+    <script src="../../js/geolocation.js"></script>
     <!-- Modal Manager -->
-    <script src="./public/js/modal-manager.js"></script>
-    <!-- SPA Cargador de Páginas -->
-    <script src="./public/js/cargador_paginas.js"></script>
+    <script src="../../js/modal-manager.js"></script>
+    <!-- SPA Cargador de Páginas Admin -->
+    <script src="../../js/cargador_paginas_admin.js"></script>
     <!-- Login Javascript -->
-    <script src="public/js/login.js"></script>
-    <script src="public/js/productosgeneral.js"></script>
-    <script src="public/js/clientes.js"></script>
-    <script src="public/js/facturas.js"></script>
-    <script src="public/js/contact.js"></script>
-    <script src="public/js/localStorage-utils.js"></script>
+    <script src="../../js/login.js"></script>
+    <script src="../../js/productosgeneral.js"></script>
+    <script src="../../js/clientes.js"></script>
+    <script src="../../js/empleados.js"></script>
+    <script src="../../js/facturas.js"></script>
+    <script src="../../js/opiniones.js"></script>
+    <script src="../../js/contact.js"></script>
+    <script src="../../js/localStorage-utils.js"></script>
     <script>
         // Show/hide login/logout buttons based on adminSession
         function updateNavButtons() {
             const loginButton = document.getElementById('loginButton');
             const logoutButton = document.getElementById('logoutButton');
+            
+            // Verificar que los elementos existan antes de acceder a sus propiedades
             if (localStorage.getItem('adminSession')) {
-                loginButton.style.display = 'none';
-                logoutButton.style.display = 'block';
+                if (loginButton) loginButton.style.display = 'none';
+                if (logoutButton) logoutButton.style.display = 'block';
             } else {
-                loginButton.style.display = 'block';
-                logoutButton.style.display = 'none';
+                if (loginButton) loginButton.style.display = 'block';
+                if (logoutButton) logoutButton.style.display = 'none';
             }
         }
 
         function logout() {
             localStorage.removeItem('adminSession');
+            localStorage.removeItem('vendorSession');
+            localStorage.removeItem('currentEmployee');
             updateNavButtons();
             cargarPaginas('index');
         }
 
         // Run on page load
-        document.addEventListener('DOMContentLoaded', updateNavButtons);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esperar un poco para que el DOM esté completamente cargado
+            setTimeout(updateNavButtons, 100);
+        });
     </script>
 </body>
 </html>
