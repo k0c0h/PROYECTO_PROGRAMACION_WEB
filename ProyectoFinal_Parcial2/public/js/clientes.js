@@ -106,11 +106,13 @@ window.initClientes = function () {
         return;
     }
 
-    // Toggle views based on admin session
+    // Toggle views based on admin or vendor session
     const isAdmin = localStorage.getItem('adminSession') === 'loggedIn';
-    console.log('[Clientes] adminSession:', isAdmin);
-    publicView.style.display = isAdmin ? 'none' : 'block';
-    adminView.style.display = isAdmin ? 'block' : 'none';
+    const isVendor = localStorage.getItem('vendorSession') === 'loggedIn';
+    const hasAccess = isAdmin || isVendor;
+    console.log('[Clientes] adminSession:', isAdmin, 'vendorSession:', isVendor, 'hasAccess:', hasAccess);
+    publicView.style.display = hasAccess ? 'none' : 'block';
+    adminView.style.display = hasAccess ? 'block' : 'none';
     console.log('[Clientes] publicView display:', publicView.style.display);
     console.log('[Clientes] adminView display:', adminView.style.display);
 
@@ -162,7 +164,7 @@ window.initClientes = function () {
 
     // Admin view: Render client table
     function renderAdminClients() {
-        if (!localStorage.getItem('adminSession')) return;
+        if (!localStorage.getItem('adminSession') && !localStorage.getItem('vendorSession')) return;
         clientTableBody.innerHTML = '';
         
         // Filter valid clients before rendering

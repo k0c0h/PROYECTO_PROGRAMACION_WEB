@@ -8,7 +8,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="../../img/favicon.ico" rel="icon">
+     <link href="../../img/icono2.png" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,8 +117,8 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-3">Versión 1.0.1</h5>
-                    <p>Esta es la versión 1.0.1 de la página: Mundo papelito.</p>
+                    <h5 class="text-white mb-3">Versión 1.0.2</h5>
+                    <p>Esta es la versión 1.0.2 de la página: Mundo papelito.</p>
                 </div>
             </div>
         </div>
@@ -162,21 +162,24 @@
     <script src="../../js/facturas.js"></script>
     <script src="../../js/localStorage-utils.js"></script>
     <script>
-        // Show/hide login/logout buttons based on adminSession
+        // Show/hide login/logout buttons based on admin or vendor session
         function updateNavButtons() {
             const loginButton = document.getElementById('loginButton');
             const logoutButton = document.getElementById('logoutButton');
-            if (localStorage.getItem('adminSession')) {
-                loginButton.style.display = 'none';
-                logoutButton.style.display = 'block';
+            const hasSession = localStorage.getItem('adminSession') || localStorage.getItem('vendorSession');
+            if (hasSession) {
+                if (loginButton) loginButton.style.display = 'none';
+                if (logoutButton) logoutButton.style.display = 'block';
             } else {
-                loginButton.style.display = 'block';
-                logoutButton.style.display = 'none';
+                if (loginButton) loginButton.style.display = 'block';
+                if (logoutButton) logoutButton.style.display = 'none';
             }
         }
 
         function logout() {
             localStorage.removeItem('adminSession');
+            localStorage.removeItem('vendorSession');
+            localStorage.removeItem('currentEmployee');
             updateNavButtons();
             cargarPaginas('index');
         }

@@ -158,8 +158,7 @@ window.initOpiniones = function () {
                 <td>
                     <div title="${comment.message}">
                         ${truncatedMessage}
-                    </div>
-                    ${comment.message.length > 100 ? '<small class="text-muted">(Haz hover para ver completo)</small>' : ''}
+                    </div>                 
                 </td>
                 <td>
                     ${comment.coordinates ? 

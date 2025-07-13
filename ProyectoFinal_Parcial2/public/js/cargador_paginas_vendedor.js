@@ -2,7 +2,7 @@ window.cargarPaginas = function (pagina) {
     const protectedPages = ['pages/productos.html', 'pages/clientes.html', 'pages/facturas.html'];
     const isProtectedPage = protectedPages.includes(pagina);
 
-    if (isProtectedPage && !localStorage.getItem('adminSession')) {
+    if (isProtectedPage && !localStorage.getItem('adminSession') && !localStorage.getItem('vendorSession')) {
         console.warn('[Cargador] Acceso denegado, redirigiendo a login');
         pagina = 'pages/login.html';
     }
