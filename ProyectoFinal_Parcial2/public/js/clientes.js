@@ -33,9 +33,47 @@ window.cleanLocalStorageClients = function() {
 window.initClientes = function () {
     console.log('[Clientes] initClientes called, initializing clients');
 
+    // Function to determine the correct image path based on current location
+    function getImageBasePath() {
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('paginaAdmin') || currentPath.includes('paginaVendedor')) {
+            return '../../img/';
+        }
+        return './public/img/';
+    }
+
+    const imageBasePath = getImageBasePath();
+    console.log('[Clientes] Image base path:', imageBasePath);
+
     // Initial client data
     const initialClients = [
-        // Array vacío - los clientes se agregarán dinámicamente
+        {
+            id: '_client1',
+            name: 'Juan Pérez',
+            email: 'juan.perez@email.com',
+            cedula: '1234567890',
+            phone: '0987654321',
+            address: 'Av. Amazonas 123, Quito',
+            photo: imageBasePath + 'images.png'
+        },
+        {
+            id: '_client2',
+            name: 'María González',
+            email: 'maria.gonzalez@email.com',
+            cedula: '0987654321',
+            phone: '0912345678',
+            address: 'Calle 10 de Agosto 456, Quito',
+            photo: imageBasePath + 'images.png'
+        },
+        {
+            id: '_client3',
+            name: 'Carlos Rodríguez',
+            email: 'carlos.rodriguez@email.com',
+            cedula: '1122334455',
+            phone: '0923456789',
+            address: 'Av. Patria 789, Quito',
+            photo: imageBasePath + 'images.png'
+        }
     ];
 
     // Function to clean corrupted clients
@@ -61,6 +99,26 @@ window.initClientes = function () {
     
     if (clients.length !== originalLength) {
         console.log('[Clientes] Cleaned corrupted clients:', originalLength - clients.length, 'removed');
+        localStorage.setItem('clients', JSON.stringify(clients));
+    }
+    
+    // Migrate existing clients to add new fields
+    let migrationNeeded = false;
+    clients = clients.map(client => {
+        if (!client.cedula || !client.phone || !client.address) {
+            migrationNeeded = true;
+            return {
+                ...client,
+                cedula: client.cedula || '0000000000',
+                phone: client.phone || '0000000000',
+                address: client.address || 'Dirección no especificada'
+            };
+        }
+        return client;
+    });
+    
+    if (migrationNeeded) {
+        console.log('[Clientes] Migrated clients with new fields');
         localStorage.setItem('clients', JSON.stringify(clients));
     }
     
@@ -146,12 +204,14 @@ window.initClientes = function () {
             div.innerHTML = `
                 <div class="team-item bg-light">
                     <div class="overflow-hidden">
-                        <img class="img-fluid" src="${client.photo || '../../img/default-client.jpg'}" alt="${client.name}">
+                        <img class="img-fluid" src="${client.photo || imageBasePath + 'images.png'}" alt="${client.name}">
                     </div>
                     <div class="text-center p-4">
                         <h5 class="mb-0">${client.name}</h5>
                         <small>
                             <p>Email: ${client.email}</p>
+                            ${client.phone ? `<p>Teléfono: ${client.phone}</p>` : ''}
+                            ${client.address ? `<p>Dirección: ${client.address}</p>` : ''}
                         </small>
                     </div>
                 </div>
@@ -183,7 +243,10 @@ window.initClientes = function () {
             row.innerHTML = `
                 <td>${client.name}</td>
                 <td>${client.email}</td>
-                <td><img src="${client.photo || '../../img/default-client.jpg'}" class="img-fluid" style="max-height: 50px;" alt="Cliente"></td>
+                <td>${client.cedula || 'N/A'}</td>
+                <td>${client.phone || 'N/A'}</td>
+                <td>${client.address || 'N/A'}</td>
+                <td><img src="${client.photo || imageBasePath + 'images.png'}" class="img-fluid" style="max-height: 50px;" alt="Cliente"></td>
                 <td>
                     <button class="btn btn-warning btn-sm me-2" onclick="editClient('${client.id}')">Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteClient('${client.id}')">Eliminar</button>
@@ -267,9 +330,64 @@ window.initClientes = function () {
             const id = document.getElementById('clientId').value || generateId();
             const name = document.getElementById('clientName').value;
             const email = document.getElementById('clientEmail').value;
+            const cedula = document.getElementById('clientCedula').value;
+            const phone = document.getElementById('clientPhone').value;
+            const address = document.getElementById('clientAddress').value;
             const photo = clientPhotoPreview ? clientPhotoPreview.src : '';
 
-            const client = { id, name, email, photo };
+            // Validaciones básicas
+            if (!name.trim()) {
+                showAlert('El nombre es requerido', 'Error de validación', 'error');
+                return;
+            }
+
+            if (!email.trim()) {
+                showAlert('El email es requerido', 'Error de validación', 'error');
+                return;
+            }
+
+            if (!cedula.trim()) {
+                showAlert('La cédula es requerida', 'Error de validación', 'error');
+                return;
+            }
+
+            if (!phone.trim()) {
+                showAlert('El teléfono es requerido', 'Error de validación', 'error');
+                return;
+            }
+
+            if (!address.trim()) {
+                showAlert('La dirección es requerida', 'Error de validación', 'error');
+                return;
+            }
+
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showAlert('El formato del email no es válido', 'Error de validación', 'error');
+                return;
+            }
+
+            // Validar que la cédula tenga 10 dígitos
+            if (cedula.length !== 10 || !/^\d+$/.test(cedula)) {
+                showAlert('La cédula debe tener 10 dígitos', 'Error de validación', 'error');
+                return;
+            }
+
+            // Validar formato de teléfono (10 dígitos)
+            if (phone.length !== 10 || !/^\d+$/.test(phone)) {
+                showAlert('El teléfono debe tener 10 dígitos', 'Error de validación', 'error');
+                return;
+            }
+
+            // Verificar que la cédula no esté duplicada
+            const existingClient = clients.find(c => c.cedula === cedula && c.id !== id);
+            if (existingClient) {
+                showAlert('Ya existe un cliente con esta cédula', 'Error de validación', 'error');
+                return;
+            }
+
+            const client = { id, name, email, cedula, phone, address, photo };
 
             if (document.getElementById('clientId').value) {
                 // Edit existing client
@@ -315,6 +433,9 @@ window.initClientes = function () {
         document.getElementById('clientId').value = client.id;
         document.getElementById('clientName').value = client.name;
         document.getElementById('clientEmail').value = client.email;
+        document.getElementById('clientCedula').value = client.cedula || '';
+        document.getElementById('clientPhone').value = client.phone || '';
+        document.getElementById('clientAddress').value = client.address || '';
         if (client.photo && clientPhotoPreview) {
             clientPhotoPreview.src = client.photo;
             clientPhotoPreview.style.display = 'block';

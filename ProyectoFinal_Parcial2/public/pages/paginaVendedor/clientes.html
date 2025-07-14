@@ -35,6 +35,18 @@
                         <input type="email" class="form-control" id="clientEmail" placeholder="Email" required>
                     </div>
                     <div class="mb-3">
+                        <label for="clientCedula" class="form-label">Cédula</label>
+                        <input type="text" class="form-control" id="clientCedula" placeholder="Número de cédula" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientPhone" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="clientPhone" placeholder="Número de teléfono" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientAddress" class="form-label">Dirección</label>
+                        <textarea class="form-control" id="clientAddress" rows="3" placeholder="Dirección completa" required></textarea>
+                    </div>
+                    <div class="mb-3">
                         <label for="clientPhoto" class="form-label">Foto</label>
                         <input type="file" class="form-control" id="clientPhoto" accept="image/*">
                         <button type="button" id="startCamera" class="btn btn-primary w-100 mt-2">Abrir Cámara</button>
@@ -54,6 +66,9 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
+                            <th>Cédula</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
                             <th>Foto</th>
                             <th>Acciones</th>
                         </tr>
